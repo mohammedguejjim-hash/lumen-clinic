@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen Clinic — Modern Medical Care</title>
+<meta name="description" content="Lumen Clinic — modern medical care. Dental, dermatology, cardiology, pediatrics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF;
+  --ink:#0A0A0A;
+  --line:rgba(10,10,10,.14);
+  --font-display:'Anton',sans-serif;
+  --font-body:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--ink);color:var(--paper)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+/* ---------- grain ---------- */
+.grain{
+  position:fixed;inset:-50%;width:200%;height:200%;
+  pointer-events:none;z-index:2000;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite;
+}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-8%)}
+  30%{transform:translate(3%,-12%)}50%{transform:translate(8%,4%)}
+  70%{transform:translate(-9%,6%)}90%{transform:translate(4%,9%)}
+}
+
+/* ---------- preloader ---------- */
+#preloader{
+  position:fixed;inset:0;z-index:3000;background:var(--ink);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;
+}
+#preloader .word{font-family:var(--font-display);font-size:clamp(2rem,6vw,4.5rem);letter-spacing:.04em;overflow:hidden}
+#preloader .word span{display:inline-block}
+#preloader .count{font-size:.85rem;letter-spacing:.35em;opacity:.6}
+#preloader .bar{width:min(320px,60vw);height:1px;background:rgba(255,255,255,.2);position:relative;overflow:hidden}
+#preloader .bar i{position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left}
+
+/* ---------- cursor ---------- */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:2500;border-radius:50%}
+.cursor-dot{width:8px;height:8px;background:#fff;mix-blend-mode:difference;transform:translate(-50%,-50%)}
+.cursor-ring{
+  width:44px;height:44px;border:1px solid rgba(255,255,255,.9);mix-blend-mode:difference;
+  transform:translate(-50%,-50%);
+  display:flex;align-items:center;justify-content:center;
+  transition:width .35s cubic-bezier(.22,1,.36,1),height .35s cubic-bezier(.22,1,.36,1),background .35s;
+}
+.cursor-ring .label{
+  font-size:.6rem;letter-spacing:.2em;color:#fff;opacity:0;transition:opacity .25s;
+  font-weight:600;
+}
+.cursor-ring.is-hover{width:92px;height:92px;background:#0A0A0A;border-color:#0A0A0A;mix-blend-mode:normal}
+.cursor-ring.is-hover .label{opacity:1;color:#fff}
+@media (hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- image reveal (services hover) ---------- */
+.img-reveal{
+  position:fixed;top:0;left:0;width:min(340px,30vw);aspect-ratio:4/3;z-index:1500;
+  pointer-events:none;overflow:hidden;opacity:0;transform:scale(.85);
+}
+.img-reveal img{width:100%;height:100%;object-fit:cover}
+@media (hover:none),(pointer:coarse){.img-reveal{display:none}}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem clamp(1.2rem,4vw,3rem);
+  mix-blend-mode:difference;color:#fff;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+nav.hidden{transform:translateY(-110%)}
+.logo{font-family:var(--font-display);font-size:1.15rem;letter-spacing:.06em}
+.nav-links{display:flex;gap:2rem;font-size:.8rem;letter-spacing:.18em;font-weight:600}
+.nav-links a{position:relative;padding:.2rem 0}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:0;width:100%;height:1px;background:currentColor;
+  transform:scaleX(0);transform-origin:right;transition:transform .4s cubic-bezier(.22,1,.36,1);
+}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 clamp(1.2rem,4vw,3rem) 2rem;position:relative}
+.hero-bg{position:absolute;inset:0;overflow:hidden;z-index:-1}
+.hero-bg img{width:100%;height:115%;object-fit:cover;transform-origin:center}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.75) 0%,rgba(5,5,5,.25) 45%,rgba(5,5,5,.15) 100%)}
+.hero-top{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  color:#fff;font-size:.8rem;letter-spacing:.22em;font-weight:500;
+  padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,.25);margin-bottom:1.6rem;
+}
+h1.display{
+  font-family:var(--font-display);color:#fff;
+  font-size:clamp(3.2rem,12.5vw,12rem);line-height:.92;letter-spacing:.01em;
+  text-transform:uppercase;
+}
+h1.display .line{display:block;overflow:hidden}
+h1.display .line-inner{display:block}
+.hero-foot{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;color:#fff}
+.hero-foot p{max-width:36ch;font-size:.95rem;line-height:1.6;opacity:.85}
+.scroll-hint{font-size:.75rem;letter-spacing:.3em;display:flex;align-items:center;gap:.8rem}
+.scroll-hint .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.4}}
+
+/* ---------- marquee ---------- */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:1.1rem 0;background:var(--paper)}
+.marquee-track{display:flex;gap:3rem;width:max-content;animation:marquee 22s linear infinite;font-family:var(--font-display);font-size:1.6rem;letter-spacing:.05em;white-space:nowrap}
+.marquee-track .sep{color:var(--ink)}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- sections ---------- */
+section{padding:clamp(5rem,10vw,9rem) clamp(1.2rem,4vw,3rem)}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:1rem;margin-bottom:clamp(2.5rem,5vw,4.5rem)}
+.sec-head .num{font-size:.8rem;letter-spacing:.25em;color:var(--ink);font-weight:600}
+.sec-head h2{font-family:var(--font-display);font-size:clamp(2rem,5vw,4rem);text-transform:uppercase;letter-spacing:.02em}
+.sec-head .side{font-size:.8rem;letter-spacing:.18em;opacity:.55}
+
+/* philosophy */
+.philosophy p.big{
+  font-size:clamp(1.6rem,3.6vw,3rem);line-height:1.35;font-weight:500;max-width:24ch;
+}
+.philosophy p.big .w{opacity:.14}
+.philosophy .sign{margin-top:3rem;display:flex;gap:1.2rem;align-items:center}
+.philosophy .sign .rule{width:64px;height:2px;background:var(--ink)}
+.philosophy .sign span{font-size:.85rem;letter-spacing:.2em}
+
+/* ---------- pulse / approach ---------- */
+#approach{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+#approach .sec-head{border-color:rgba(255,255,255,.18)}
+#approach .sec-head .num{color:#fff}
+#approach .sec-head .side{opacity:.6}
+.pulse-wrap{position:relative}
+#pulse{width:100%;height:auto;display:block}
+#pulse .draw{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1;opacity:.95;stroke-linejoin:round;stroke-linecap:round}
+#pulse .grid{stroke:rgba(255,255,255,.08);stroke-width:1}
+#pulse text{fill:#fff;font-family:var(--font-body);font-size:13px;letter-spacing:.22em;opacity:.7}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.15);margin-top:3.5rem}
+.step{background:var(--ink);padding:1.8rem 1.4rem;transition:background .4s;color:#fff}
+.step:hover{background:#161616}
+.step .n{font-family:var(--font-display);color:#fff;font-size:1.4rem;margin-bottom:.9rem}
+.step h3{font-size:1.05rem;letter-spacing:.06em;margin-bottom:.6rem;font-weight:600}
+.step p{font-size:.88rem;line-height:1.65;opacity:.65}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+
+/* ---------- services ---------- */
+.service{
+  display:grid;grid-template-columns:70px 1fr auto auto;gap:clamp(1rem,3vw,2.5rem);align-items:center;
+  padding:2.2rem 0;border-bottom:1px solid var(--line);position:relative;
+}
+.service:first-of-type{border-top:1px solid var(--line)}
+.service .idx{font-family:var(--font-display);font-size:1.1rem;color:var(--ink)}
+.service h3{
+  font-family:var(--font-display);font-size:clamp(1.8rem,4.6vw,3.6rem);text-transform:uppercase;
+  letter-spacing:.02em;line-height:1;transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+.service .meta{font-size:.85rem;letter-spacing:.14em;opacity:.6;white-space:nowrap}
+.service .cat{font-size:.75rem;letter-spacing:.2em;border:1px solid var(--line);border-radius:99px;padding:.5rem 1.1rem;white-space:nowrap}
+.service::after{
+  content:'';position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--ink);
+  transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+.service:hover::after{transform:scaleX(1)}
+.service:hover h3{transform:translateX(14px)}
+@media(max-width:720px){.service{grid-template-columns:44px 1fr}.service .meta,.service .cat{display:none}}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:2.6rem 1.5rem;border-left:1px solid var(--line);text-align:left}
+.stat:first-child{border-left:none}
+.stat .val{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,4.2rem);color:var(--ink)}
+.stat .lbl{margin-top:.6rem;font-size:.8rem;letter-spacing:.2em;opacity:.55}
+@media(max-width:720px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:none}.stat{border-top:1px solid var(--line)}.stat:nth-child(-n+2){border-top:none}}
+
+/* ---------- clinic ---------- */
+.clinic-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+.clinic-img{overflow:hidden;aspect-ratio:4/5}
+.clinic-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.12)}
+.clinic-txt h3{font-family:var(--font-display);font-size:clamp(1.8rem,3.6vw,3rem);text-transform:uppercase;margin-bottom:1.6rem;line-height:1.05}
+.clinic-txt p{line-height:1.8;opacity:.75;margin-bottom:1.2rem;max-width:46ch}
+.clinic-txt .btn{display:inline-block;margin-top:1.4rem;border:1px solid var(--ink);padding:1rem 2.2rem;font-size:.8rem;letter-spacing:.22em;font-weight:600;transition:background .35s,color .35s}
+.clinic-txt .btn:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:860px){.clinic-grid{grid-template-columns:1fr}.clinic-img{aspect-ratio:16/10}}
+
+/* ---------- contact ---------- */
+#contact{background:var(--ink);color:#fff;text-align:left;position:relative;overflow:hidden}
+#contact .kicker{font-size:.8rem;letter-spacing:.3em;color:#fff;margin-bottom:1.6rem;font-weight:600;opacity:.7}
+#contact h2{font-family:var(--font-display);font-size:clamp(2.6rem,8.5vw,8rem);line-height:.95;text-transform:uppercase}
+#contact h2 .line{display:block;overflow:hidden}
+#contact h2 .line-inner{display:block}
+#contact .mail{
+  display:inline-block;margin-top:3rem;font-size:clamp(1.1rem,2.6vw,1.8rem);letter-spacing:.04em;
+  border-bottom:2px solid #fff;padding-bottom:.4rem;transition:opacity .3s;
+}
+#contact .mail:hover{opacity:.6}
+#contact .phone{display:block;margin-top:1.2rem;font-size:1rem;letter-spacing:.14em;opacity:.7}
+footer{background:var(--ink);color:#fff;border-top:1px solid rgba(255,255,255,.15);padding:1.6rem clamp(1.2rem,4vw,3rem);display:flex;justify-content:space-between;font-size:.75rem;letter-spacing:.18em;opacity:.85}
+footer span:last-child{opacity:.6}
+
+[data-reveal]{opacity:0;transform:translateY(46px)}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  [data-reveal]{opacity:1;transform:none}
+  #preloader{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="word"><span>LUMEN&nbsp;CLINIC</span></div>
+  <div class="bar"><i></i></div>
+  <div class="count">00</div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"><span class="label">VIEW</span></div>
+
+<!-- HOVER IMAGE REVEAL -->
+<div class="img-reveal"><img src="" alt=""></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo" data-hover>LUMEN CLINIC<sup style="font-size:.6em">®</sup></a>
+  <div class="nav-links">
+    <a href="#approach" data-hover>APPROACH</a>
+    <a href="#services" data-hover>SERVICES</a>
+    <a href="#clinic" data-hover>CLINIC</a>
+    <a href="#contact" data-hover>CONTACT</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" style="padding-top:0">
+    <div class="hero-bg"><img id="heroImg" src="assets/img/hero.jpg" alt="Lumen Clinic building at dusk"></div>
+    <div class="hero-top">
+      <span>MODERN MEDICAL CARE</span>
+      <span>FÈS — CASABLANCA</span>
+      <span>EST. 2015</span>
+    </div>
+    <h1 class="display">
+      <span class="line"><span class="line-inner">CARE,</span></span>
+      <span class="line"><span class="line-inner">BY DESIGN.</span></span>
+    </h1>
+    <div class="hero-foot">
+      <p>A clinic where medicine meets calm — precise diagnostics, honest care, and spaces designed to heal.</p>
+      <div class="scroll-hint"><span class="dot"></span>SCROLL</div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>DENTAL</span><span class="sep">✳</span><span>DERMATOLOGY</span><span class="sep">✳</span>
+      <span>CARDIOLOGY</span><span class="sep">✳</span><span>PEDIATRICS</span><span class="sep">✳</span>
+      <span>DENTAL</span><span class="sep">✳</span><span>DERMATOLOGY</span><span class="sep">✳</span>
+      <span>CARDIOLOGY</span><span class="sep">✳</span><span>PEDIATRICS</span><span class="sep">✳</span>
+    </div>
+  </div>
+
+  <!-- PHILOSOPHY -->
+  <section class="philosophy">
+    <div class="sec-head" data-reveal>
+      <span class="num">01</span><h2>Philosophy</h2><span class="side">WHAT WE BELIEVE</span>
+    </div>
+    <p class="big" id="philosophyText">We believe healing begins before treatment — in the light of the room, in the unhurried time of a consultation, in the precision of a diagnosis. Medicine is a science. Care is an art.</p>
+    <div class="sign" data-reveal><span class="rule"></span><span>DR. L. BENALI — FOUNDER</span></div>
+  </section>
+
+  <!-- APPROACH / PULSE -->
+  <section id="approach">
+    <div class="sec-head" data-reveal>
+      <span class="num">02</span><h2>From symptom to solution</h2><span class="side">OUR APPROACH</span>
+    </div>
+    <div class="pulse-wrap" data-reveal>
+      <svg id="pulse" viewBox="0 0 800 240" role="img" aria-label="Heartbeat line drawing">
+        <g class="grid">
+          <path d="M0 40 H800 M0 80 H800 M0 120 H800 M0 160 H800 M0 200 H800"/>
+          <path d="M100 0 V240 M200 0 V240 M300 0 V240 M400 0 V240 M500 0 V240 M600 0 V240 M700 0 V240"/>
+        </g>
+        <path class="draw" pathLength="1" d="M-10 120 H150 L175 120 L195 120 L212 45 L232 195 L250 120 H320 L342 120 L360 75 L378 165 L396 120 H470 L492 120 L510 35 L530 205 L550 120 H630 L650 120 L668 85 L686 155 L704 120 H810"/>
+        <text x="30" y="30">72 BPM</text>
+        <text x="660" y="30">SINUS RHYTHM</text>
+      </svg>
+    </div>
+    <div class="steps">
+      <div class="step" data-reveal><div class="n">01</div><h3>LISTEN</h3><p>Every diagnosis starts with listening. Unhurried consultations where your story matters as much as your symptoms.</p></div>
+      <div class="step" data-reveal><div class="n">02</div><h3>DIAGNOSE</h3><p>In-house imaging and laboratory. Precise, evidence-based diagnostics — no guesswork, no unnecessary tests.</p></div>
+      <div class="step" data-reveal><div class="n">03</div><h3>TREAT</h3><p>Modern, minimally invasive treatments tailored to you. We explain every option before we act.</p></div>
+      <div class="step" data-reveal><div class="n">04</div><h3>FOLLOW</h3><p>Care doesn't end at the door. Structured follow-ups keep your recovery on track.</p></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="sec-head" data-reveal>
+      <span class="num">03</span><h2>Services</h2><span class="side">FOUR DEPARTMENTS</span>
+    </div>
+    <div class="services-list">
+      <a class="service" href="#contact" data-img="assets/img/service-dental.jpg" data-hover data-reveal>
+        <span class="idx">01</span><h3>Dental Care</h3>
+        <span class="meta">IMPLANTS — ORTHODONTICS</span><span class="cat">SMILE</span>
+      </a>
+      <a class="service" href="#contact" data-img="assets/img/service-derma.jpg" data-hover data-reveal>
+        <span class="idx">02</span><h3>Dermatology</h3>
+        <span class="meta">LASER — AESTHETIC</span><span class="cat">SKIN</span>
+      </a>
+      <a class="service" href="#contact" data-img="assets/img/service-cardio.jpg" data-hover data-reveal>
+        <span class="idx">03</span><h3>Cardiology</h3>
+        <span class="meta">IMAGING — PREVENTION</span><span class="cat">HEART</span>
+      </a>
+      <a class="service" href="#contact" data-img="assets/img/service-pediatrie.jpg" data-hover data-reveal>
+        <span class="idx">04</span><h3>Pediatrics</h3>
+        <span class="meta">VACCINATION — GROWTH</span><span class="cat">CHILDREN</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section style="padding-top:0">
+    <div class="stats" data-reveal>
+      <div class="stat"><div class="val"><span data-count="12">0</span>k+</div><div class="lbl">PATIENTS TREATED</div></div>
+      <div class="stat"><div class="val"><span data-count="25">0</span></div><div class="lbl">SPECIALISTS</div></div>
+      <div class="stat"><div class="val"><span data-count="10">0</span></div><div class="lbl">YEARS OF CARE</div></div>
+      <div class="stat"><div class="val"><span data-count="98">0</span>%</div><div class="lbl">SATISFACTION</div></div>
+    </div>
+  </section>
+
+  <!-- CLINIC -->
+  <section id="clinic">
+    <div class="sec-head" data-reveal>
+      <span class="num">04</span><h2>The clinic</h2><span class="side">A PLACE TO HEAL</span>
+    </div>
+    <div class="clinic-grid">
+      <div class="clinic-img" data-reveal><img id="clinicImg" src="assets/img/clinic.jpg" alt="Doctor in the Lumen Clinic corridor"></div>
+      <div class="clinic-txt">
+        <h3 data-reveal>Not a hospital.<br>A place to heal.</h3>
+        <p data-reveal>No crowded corridors, no endless waiting. Twenty-five specialists, four departments, one promise: medicine practiced slowly and precisely.</p>
+        <p data-reveal>Designed with natural light, quiet materials and honest lines — because the space you heal in is part of the treatment.</p>
+        <a class="btn" href="#contact" data-hover data-reveal>MEET THE TEAM</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="kicker" data-reveal>05 — CONTACT</div>
+    <h2>
+      <span class="line"><span class="line-inner">Book your</span></span>
+      <span class="line"><span class="line-inner">appointment.</span></span>
+    </h2>
+    <a class="mail" href="mailto:hello@lumen-clinic.ma" data-hover data-reveal>hello@lumen-clinic.ma</a>
+    <span class="phone" data-reveal>+212 522 000 000 — MON–SAT, 8:00–20:00</span>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 LUMEN CLINIC — TEMPLATE</span>
+  <span>FÈS · CASABLANCA</span>
+</footer>
+
+<noscript><style>#preloader{display:none}[data-reveal]{opacity:1;transform:none}</style></noscript>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* Safety: if libraries failed to load, show everything */
+  if(!window.gsap || !window.Lenis){
+    var p=document.getElementById('preloader'); if(p) p.style.display='none';
+    document.querySelectorAll('[data-reveal]').forEach(function(e){e.style.opacity=1;e.style.transform='none';});
+    document.querySelectorAll('.line-inner').forEach(function(e){e.style.transform='none';});
+    return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- Lenis smooth scroll ---------- */
+  var lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(function(t){ lenis.raf(t*1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  /* ---------- Anchor navigation ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href');
+      if(id.length > 1){
+        var target = document.querySelector(id);
+        if(target){ e.preventDefault(); lenis.scrollTo(target, { offset: 0, duration: 1.6 }); }
+      }
+    });
+  });
+
+  /* ---------- Custom cursor ---------- */
+  var dot = document.querySelector('.cursor-dot'),
+      ring = document.querySelector('.cursor-ring'),
+      mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
+  window.addEventListener('mousemove', function(e){
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = 'translate('+(mx-4)+'px,'+(my-4)+'px)';
+  });
+  gsap.ticker.add(function(){
+    rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+    var s = ring.classList.contains('is-hover') ? 46 : 22;
+    ring.style.transform = 'translate('+(rx-s)+'px,'+(ry-s)+'px)';
+  });
+  document.addEventListener('mouseover', function(e){
+    if(e.target.closest('[data-hover]')) ring.classList.add('is-hover');
+  });
+  document.addEventListener('mouseout', function(e){
+    if(e.target.closest('[data-hover]')) ring.classList.remove('is-hover');
+  });
+
+  /* ---------- Preloader then hero intro ---------- */
+  var heroLines = document.querySelectorAll('h1.display .line-inner');
+  gsap.set(heroLines, { yPercent: 112 });
+
+  var counter = { v: 0 },
+      countEl = document.querySelector('#preloader .count'),
+      barEl = document.querySelector('#preloader .bar i'),
+      preWord = document.querySelector('#preloader .word span');
+  gsap.set(preWord, { yPercent: 110 });
+  var loadTl = gsap.timeline();
+  loadTl
+    .to(preWord, { yPercent: 0, duration: 0.9, ease: 'power4.out' })
+    .to(counter, { v: 100, duration: 1.8, ease: 'power2.inOut',
+        onUpdate: function(){
+          var n = Math.round(counter.v);
+          countEl.textContent = (n < 10 ? '0' : '') + n;
+          barEl.style.transform = 'scaleX(' + (n/100) + ')';
+        } }, '-=0.3')
+    .to('#preloader', { yPercent: -100, duration: 1, ease: 'power4.inOut',
+        onComplete: function(){ document.getElementById('preloader').style.display='none'; } })
+    .to(heroLines, { yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: 0.12 }, '-=0.55')
+    .from('.hero-top, .hero-foot', { y: 24, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, '-=0.9')
+    .from('nav', { y: -30, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.8');
+
+  /* ---------- Generic reveals ---------- */
+  gsap.utils.toArray('[data-reveal]').forEach(function(el){
+    gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+  });
+
+  /* ---------- Philosophy: word by word ---------- */
+  var man = document.getElementById('philosophyText');
+  if(man){
+    var words = man.textContent.trim().split(/\s+/);
+    man.innerHTML = words.map(function(w){ return '<span class="w">'+w+'</span>'; }).join(' ');
+    gsap.to('#philosophyText .w', { opacity: 1, stagger: 0.05, ease: 'none',
+      scrollTrigger: { trigger: man, start: 'top 78%', end: 'bottom 45%', scrub: 1 } });
+  }
+
+  /* ---------- Pulse line drawing (scroll scrub) ---------- */
+  gsap.to('#pulse .draw', { strokeDashoffset: 0, ease: 'none',
+    scrollTrigger: { trigger: '.pulse-wrap', start: 'top 72%', end: 'bottom 55%', scrub: 1 } });
+
+  /* ---------- Services: image follows cursor ---------- */
+  var reveal = document.querySelector('.img-reveal'),
+      revealImg = reveal.querySelector('img'),
+      fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches,
+      tx = 0, ty = 0, ix = 0, iy = 0, active = false;
+  if(fine){
+    document.querySelector('#services').addEventListener('mousemove', function(e){ tx = e.clientX; ty = e.clientY; });
+    gsap.ticker.add(function(){
+      ix += (tx - ix) * 0.12; iy += (ty - iy) * 0.12;
+      reveal.style.transform = 'translate('+(ix - reveal.offsetWidth/2)+'px,'+(iy - reveal.offsetHeight*0.62)+'px) scale('+(active?1:0.85)+')';
+    });
+    document.querySelectorAll('.service').forEach(function(row){
+      row.addEventListener('mouseenter', function(){
+        revealImg.src = row.getAttribute('data-img');
+        active = true;
+        gsap.to(reveal, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+      });
+      row.addEventListener('mouseleave', function(){
+        active = false;
+        gsap.to(reveal, { opacity: 0, duration: 0.3, ease: 'power2.in' });
+      });
+    });
+  }
+
+  /* ---------- Parallax images ---------- */
+  gsap.to('#heroImg', { yPercent: 14, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.fromTo('#clinicImg', { yPercent: -8 }, { yPercent: 8, ease: 'none',
+    scrollTrigger: { trigger: '.clinic-img', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+  /* ---------- Counters ---------- */
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var end = parseInt(el.getAttribute('data-count'), 10);
+    ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true,
+      onEnter: function(){
+        var o = { v: 0 };
+        gsap.to(o, { v: end, duration: 1.6, ease: 'power2.out',
+          onUpdate: function(){ el.textContent = Math.round(o.v); } });
+      } });
+  });
+
+  /* ---------- Contact title reveal ---------- */
+  gsap.from('#contact h2 .line-inner', { yPercent: 110, duration: 1.1, ease: 'power4.out', stagger: 0.12,
+    scrollTrigger: { trigger: '#contact', start: 'top 70%', once: true } });
+
+  /* ---------- Hide nav on scroll down ---------- */
+  var nav = document.getElementById('nav'), lastY = 0;
+  lenis.on('scroll', function(e){
+    var y = e.scroll;
+    if(y > lastY && y > 350) nav.classList.add('hidden');
+    else nav.classList.remove('hidden');
+    lastY = y;
+  });
+
+  window.addEventListener('load', function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body>
+</html>
